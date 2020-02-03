@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/hoanhan101/progress/internal/hello"
+	"github.com/hoanhan101/progress/internal/server"
 )
 
 func main() {
-	hello.Hello()
+	server.Echo()
 }
