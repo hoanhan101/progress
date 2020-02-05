@@ -1,0 +1,13 @@
+#
+# docker-compose.yml
+#
+# Run progress with a postgres instance.
+#
+
+version: '3'
+services:
+  progress:
+    container_name: progress
+    image: hoanhan101/progress
+    ports:
+    - '8000:8000'
