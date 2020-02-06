@@ -9,6 +9,7 @@ import (
 
 	"github.com/hoanhan101/progress/internal/config"
 	"github.com/hoanhan101/progress/internal/database"
+	"github.com/hoanhan101/progress/internal/goal"
 )
 
 // Server is the HTTP API server component.
@@ -33,6 +34,7 @@ func NewServer(cfg *config.Config, d *sqlx.DB) *Server {
 	// Register routes.
 	s.server.GET("/config", s.configHandler)
 	s.server.GET("/health", s.healthHandler)
+	s.server.GET("/goals", s.goalsHandler)
 
 	return s
 }
@@ -63,4 +65,13 @@ func (s *Server) healthHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func (s *Server) goalsHandler(c echo.Context) error {
+	goals, err := goal.List(s.db)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"data": goals})
 }
