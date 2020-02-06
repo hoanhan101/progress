@@ -21,7 +21,13 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	// Register routes.
 	server.GET("/config", handler.Config)
 	server.GET("/health", handler.Health)
+
+	server.POST("/goal", handler.CreateGoal)
+	// server.GET("/goal/:id", handler.GetGoal)
+	// server.PUT("/goal/:id", handler.UpdateGoal)
+	// server.DELETE("/goal/:id", handler.DeleteGoal)
 	server.GET("/goals", handler.ListGoals)
+
 	server.GET("/systems", handler.ListSystems)
 
 	// Start the server.

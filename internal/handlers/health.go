@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +18,10 @@ func (h *Handler) Health(c echo.Context) error {
 	err := database.StatusCheck(h.db)
 	if err != nil {
 		resp["status"] = "db not ready"
-		return err
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			fmt.Sprintf("failed to check database status: %v", err),
+		)
 	}
 
 	return c.JSON(http.StatusOK, resp)
