@@ -6,19 +6,19 @@ import (
 )
 
 type Config struct {
-	Server ServerOptions `json:"server"`
-	DB     DBOptions     `json:"db"`
+	Server   *ServerOptions   `json:"server"`
+	Database *DatabaseOptions `json:"database"`
 }
 
 type ServerOptions struct {
 	Address string `json:"address"`
 }
 
-type DBOptions struct {
+type DatabaseOptions struct {
 	User     string `json:"user" pg:"user"`
 	Password string `json:"password" pg:"password"`
 	Host     string `json:"host" pg:"host"`
-	Port     string `json:"port" pg:"port"`
+	Port     int    `json:"port" pg:"port"`
 	SSLMode  string `json:"sslmode" pg:"sslmode"`
 }
 

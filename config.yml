@@ -1,9 +1,9 @@
 server:
   address: :8000
 
-db:
+database:
   user: postgres
-  password: test
+  password: postgres
   host: postgres
   port: 5432
   sslmode: disable
