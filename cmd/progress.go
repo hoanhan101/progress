@@ -42,8 +42,7 @@ func run() error {
 	}
 
 	// Run the server.
-	s := server.NewServer(cfg, db)
-	if err := s.Run(); err != nil {
+	if err := server.Start(cfg, db); err != nil {
 		return err
 	}
 

@@ -1,77 +1,34 @@
 package server
 
 import (
-	"net/http"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/hoanhan101/progress/internal/config"
-	"github.com/hoanhan101/progress/internal/database"
-	"github.com/hoanhan101/progress/internal/goal"
+	"github.com/hoanhan101/progress/internal/handlers"
 )
 
-// Server is the HTTP API server component.
-type Server struct {
-	config *config.Config
-	server *echo.Echo
-	db     *sqlx.DB
-}
-
-// NewServer returns a new Server.
-func NewServer(cfg *config.Config, d *sqlx.DB) *Server {
-	s := &Server{
-		config: cfg,
-		server: echo.New(),
-		db:     d,
-	}
+func Start(cfg *config.Config, db *sqlx.DB) error {
+	server := echo.New()
+	handler := handlers.NewHandler(cfg, db)
 
 	// Register middleware.
-	s.server.Use(middleware.Logger())
-	s.server.Use(middleware.Recover())
+	server.Use(middleware.Logger())
+	server.Use(middleware.Recover())
 
 	// Register routes.
-	s.server.GET("/config", s.configHandler)
-	s.server.GET("/health", s.healthHandler)
-	s.server.GET("/goals", s.goalsHandler)
+	server.GET("/config", handler.Config)
+	server.GET("/health", handler.Health)
+	server.GET("/goals", handler.ListGoals)
+	server.GET("/systems", handler.ListSystems)
 
-	return s
-}
-
-func (s *Server) Run() error {
-	err := s.server.Start(s.config.Server.Address)
+	// Start the server.
+	err := server.Start(cfg.Server.Address)
 	if err != nil {
-		s.server.Logger.Fatal(err)
+		server.Logger.Fatal(err)
 		return err
 	}
 
 	return nil
-}
-
-func (s *Server) configHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, s.config)
-}
-
-func (s *Server) healthHandler(c echo.Context) error {
-	resp := map[string]string{
-		"status": "ok",
-	}
-
-	err := database.StatusCheck(s.db)
-	if err != nil {
-		resp["status"] = "db not ready"
-		return err
-	}
-
-	return c.JSON(http.StatusOK, resp)
-}
-
-func (s *Server) goalsHandler(c echo.Context) error {
-	goals, err := goal.List(s.db)
-	if err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{"data": goals})
 }
