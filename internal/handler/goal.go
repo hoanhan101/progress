@@ -91,3 +91,24 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, goal)
 }
+
+// DeleteGoal deletes a specified goal in the system.
+func (h *Handler) DeleteGoal(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return echo.NewHTTPError(
+			http.StatusBadRequest,
+			"id is not specified in the URI",
+		)
+	}
+
+	err := model.DeleteGoal(h.db, id)
+	if err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+	}
+
+	return c.JSON(http.StatusNoContent, nil)
+}

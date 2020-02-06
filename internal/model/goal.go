@@ -25,8 +25,7 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 		(goal_id, name, date_created)
 		VALUES ($1, $2, $3)`
 
-	_, err := db.Exec(q, g.ID, g.Name, g.DateCreated)
-	if err != nil {
+	if _, err := db.Exec(q, g.ID, g.Name, g.DateCreated); err != nil {
 		return nil, err
 	}
 
@@ -54,8 +53,7 @@ func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
 		FROM goals as g
 		WHERE g.goal_id = $1`
 
-	err := db.Get(&g, q, id)
-	if err != nil {
+	if err := db.Get(&g, q, id); err != nil {
 		return nil, err
 	}
 
@@ -76,10 +74,24 @@ func UpdateGoal(db *sqlx.DB, id string, name string) (*Goal, error) {
 		"name" = $2
 		WHERE goal_id = $1`
 
-	_, err = db.Exec(q, id, g.Name)
-	if err != nil {
+	if _, err = db.Exec(q, id, g.Name); err != nil {
 		return nil, err
 	}
 
 	return g, nil
+}
+
+// DeleteGoal deletes a goal from the table.
+func DeleteGoal(db *sqlx.DB, id string) error {
+	if _, err := uuid.Parse(id); err != nil {
+		return err
+	}
+
+	const q = `DELETE FROM goals WHERE goal_id = $1`
+
+	if _, err := db.Exec(q, id); err != nil {
+		return err
+	}
+
+	return nil
 }
