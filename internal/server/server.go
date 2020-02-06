@@ -6,29 +6,29 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/hoanhan101/progress/internal/config"
-	"github.com/hoanhan101/progress/internal/handlers"
+	"github.com/hoanhan101/progress/internal/handler"
 )
 
 // Start runs the server.
 func Start(cfg *config.Config, db *sqlx.DB) error {
 	server := echo.New()
-	handler := handlers.NewHandler(cfg, db)
+	handle := handler.NewHandler(cfg, db)
 
 	// Register middleware.
 	server.Use(middleware.Logger())
 	server.Use(middleware.Recover())
 
 	// Register routes.
-	server.GET("/config", handler.Config)
-	server.GET("/health", handler.Health)
+	server.GET("/config", handle.Config)
+	server.GET("/health", handle.Health)
 
-	server.POST("/goal", handler.CreateGoal)
-	// server.GET("/goal/:id", handler.GetGoal)
-	// server.PUT("/goal/:id", handler.UpdateGoal)
-	// server.DELETE("/goal/:id", handler.DeleteGoal)
-	server.GET("/goals", handler.ListGoals)
+	server.POST("/goal", handle.CreateGoal)
+	// server.GET("/goal/:id",handle.GetGoal)
+	// server.PUT("/goal/:id",handle.UpdateGoal)
+	// server.DELETE("/goal/:id",handle.DeleteGoal)
+	server.GET("/goals", handle.ListGoals)
 
-	server.GET("/systems", handler.ListSystems)
+	server.GET("/systems", handle.ListSystems)
 
 	// Start the server.
 	err := server.Start(cfg.Server.Address)
