@@ -32,8 +32,8 @@ INSERT INTO goals (goal_id, name, date_created) VALUES
 
 INSERT INTO systems (system_id, goal_id, name, repeat, date_created) VALUES
 	('98b6d4b8-f04b-4c79-8c2e-a0aef46854b7', 'a2b0639f-2cc6-44b8-b97b-15d69dbb511e', 'Write every Monday and Thursday', 'Every Mon and Thu', '2020-01-01 00:00:03.000001+00'),
-	('a235be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Squat 3 times a week', NULL, '2019-01-01 00:00:05.000001+00'),
-	('a335be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Bench 3 times a week', NULL, '2019-01-01 00:00:05.000001+00'),
-	('a435be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Deadlift 3 times a week', NULL, '2019-01-01 00:00:05.000001+00')
+	('a235be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Squat 3 times a week', '', '2019-01-01 00:00:05.000001+00'),
+	('a335be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Bench 3 times a week', '', '2019-01-01 00:00:05.000001+00'),
+	('a435be9e-ab5d-44e6-a987-fa1c749264c7', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 'Deadlift 3 times a week', '', '2019-01-01 00:00:05.000001+00')
 	ON CONFLICT DO NOTHING;
 `
