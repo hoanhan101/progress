@@ -25,7 +25,7 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	server.POST("/goal", handle.CreateGoal)
 	server.GET("/goal", handle.GetGoals)
 	server.GET("/goal/:id", handle.GetGoal)
-	// server.PUT("/goal/:id",handle.UpdateGoal)
+	server.PUT("/goal/:id", handle.UpdateGoal)
 	// server.DELETE("/goal/:id",handle.DeleteGoal)
 
 	server.GET("/system", handle.GetSystems)

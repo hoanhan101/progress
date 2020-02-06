@@ -19,8 +19,7 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
 		Name:        name,
-		DateCreated: time.Now().UTC(),
-	}
+		DateCreated: time.Now().UTC()}
 	const q = `
 		INSERT INTO goals
 		(goal_id, name, date_created)
@@ -32,6 +31,18 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	}
 
 	return &g, nil
+}
+
+// GetGoals retrieves all goals from the table.
+func GetGoals(db *sqlx.DB) ([]Goal, error) {
+	gs := []Goal{}
+	const q = `SELECT * FROM goals;`
+
+	if err := db.Select(&gs, q); err != nil {
+		return nil, err
+	}
+
+	return gs, nil
 }
 
 // GetGoal retrieves a goal from the table.
@@ -51,14 +62,24 @@ func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
 	return &g, nil
 }
 
-// GetGoals retrieves all goals from the table.
-func GetGoals(db *sqlx.DB) ([]Goal, error) {
-	gs := []Goal{}
-	const q = `SELECT * FROM goals;`
-
-	if err := db.Select(&gs, q); err != nil {
+// UpdateGoal updates a goal from the table.
+func UpdateGoal(db *sqlx.DB, id string, name string) (*Goal, error) {
+	g, err := GetGoal(db, id)
+	if err != nil {
 		return nil, err
 	}
 
-	return gs, nil
+	g.Name = name
+
+	const q = `
+		UPDATE goals SET
+		"name" = $2
+		WHERE goal_id = $1`
+
+	_, err = db.Exec(q, id, g.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return g, nil
 }

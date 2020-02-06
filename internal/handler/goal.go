@@ -10,15 +10,15 @@ import (
 
 // CreateGoal creates a goal in the system.
 func (h *Handler) CreateGoal(c echo.Context) error {
-	n := c.FormValue("name")
-	if n == "" {
+	name := c.FormValue("name")
+	if name == "" {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"name is not specified",
+			"name is not specified in the request body",
 		)
 	}
 
-	g, err := model.CreateGoal(h.db, n)
+	goal, err := model.CreateGoal(h.db, name)
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -26,12 +26,12 @@ func (h *Handler) CreateGoal(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, g)
+	return c.JSON(http.StatusOK, goal)
 }
 
 // GetGoals gets all goals in the system.
 func (h *Handler) GetGoals(c echo.Context) error {
-	gs, err := model.GetGoals(h.db)
+	goals, err := model.GetGoals(h.db)
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -39,7 +39,7 @@ func (h *Handler) GetGoals(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, gs)
+	return c.JSON(http.StatusOK, goals)
 }
 
 // GetGoal gets a specified goal in the system.
@@ -48,11 +48,11 @@ func (h *Handler) GetGoal(c echo.Context) error {
 	if id == "" {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"id is not specified",
+			"id is not specified in the URI",
 		)
 	}
 
-	g, err := model.GetGoal(h.db, id)
+	goal, err := model.GetGoal(h.db, id)
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -60,5 +60,34 @@ func (h *Handler) GetGoal(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, g)
+	return c.JSON(http.StatusOK, goal)
+}
+
+// UpdateGoal updates a specified goal in the system.
+func (h *Handler) UpdateGoal(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return echo.NewHTTPError(
+			http.StatusBadRequest,
+			"id is not specified in the URI",
+		)
+	}
+
+	name := c.FormValue("name")
+	if name == "" {
+		return echo.NewHTTPError(
+			http.StatusBadRequest,
+			"name is not specified in the request body",
+		)
+	}
+
+	goal, err := model.UpdateGoal(h.db, id, name)
+	if err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+	}
+
+	return c.JSON(http.StatusOK, goal)
 }
