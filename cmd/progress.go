@@ -25,12 +25,21 @@ func run() error {
 	}
 
 	// Wait for a while for the database to be ready then open its connection.
-	time.Sleep(6 * time.Second)
+	time.Sleep(3 * time.Second)
 	db, err := database.Open(cfg)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
+
+	// Bring the schema up to date and load the seed data.
+	if err := database.Migrate(db); err != nil {
+		return err
+	}
+
+	if err := database.Seed(db); err != nil {
+		return err
+	}
 
 	// Run the server.
 	s := server.NewServer(cfg, db)
