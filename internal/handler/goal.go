@@ -8,17 +8,17 @@ import (
 	"github.com/hoanhan101/progress/internal/model"
 )
 
-// CreateGoal is the handler creating a goal endpoint.
+// CreateGoal creates a goal in the system.
 func (h *Handler) CreateGoal(c echo.Context) error {
-	name := c.FormValue("name")
-	if name == "" {
+	n := c.FormValue("name")
+	if n == "" {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"require name value",
+			"name is not specified",
 		)
 	}
 
-	g, err := model.CreateGoal(h.db, name)
+	g, err := model.CreateGoal(h.db, n)
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -29,9 +29,9 @@ func (h *Handler) CreateGoal(c echo.Context) error {
 	return c.JSON(http.StatusOK, g)
 }
 
-// ListGoals is the handler for listing all goals endpoint.
-func (h *Handler) ListGoals(c echo.Context) error {
-	goals, err := model.ListGoals(h.db)
+// GetGoals gets all goals in the system.
+func (h *Handler) GetGoals(c echo.Context) error {
+	gs, err := model.GetGoals(h.db)
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -39,5 +39,26 @@ func (h *Handler) ListGoals(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, goals)
+	return c.JSON(http.StatusOK, gs)
+}
+
+// GetGoal gets a specified goal in the system.
+func (h *Handler) GetGoal(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return echo.NewHTTPError(
+			http.StatusBadRequest,
+			"id is not specified",
+		)
+	}
+
+	g, err := model.GetGoal(h.db, id)
+	if err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+	}
+
+	return c.JSON(http.StatusOK, g)
 }

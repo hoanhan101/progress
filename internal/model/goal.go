@@ -14,7 +14,7 @@ type Goal struct {
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
-// CreateGoal creates a goal in the table for a given name.
+// CreateGoal creates a goal in the table.
 func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
@@ -34,14 +34,31 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	return &g, nil
 }
 
-// ListGoals gets all goals in the table.
-func ListGoals(db *sqlx.DB) ([]Goal, error) {
-	goals := []Goal{}
-	const q = `SELECT * FROM goals;`
+// GetGoal retrieves a goal from the table.
+func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
+	var g Goal
 
-	if err := db.Select(&goals, q); err != nil {
+	const q = `
+		SELECT * 
+		FROM goals as g
+		WHERE g.goal_id = $1`
+
+	err := db.Get(&g, q, id)
+	if err != nil {
 		return nil, err
 	}
 
-	return goals, nil
+	return &g, nil
+}
+
+// GetGoals retrieves all goals from the table.
+func GetGoals(db *sqlx.DB) ([]Goal, error) {
+	gs := []Goal{}
+	const q = `SELECT * FROM goals;`
+
+	if err := db.Select(&gs, q); err != nil {
+		return nil, err
+	}
+
+	return gs, nil
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/hoanhan101/progress/internal/database"
 )
 
+// Health represents a health information.
 type Health struct {
 	Status string `json:"status"`
 }
