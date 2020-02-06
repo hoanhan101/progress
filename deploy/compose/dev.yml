@@ -1,7 +1,5 @@
 #
-# docker-compose.yml
-#
-# Run progress with a postgres instance.
+# Run progress with a postgres instance in dev environment.
 #
 
 version: '3'

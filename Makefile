@@ -25,9 +25,9 @@ clean:  ## Remove temporary files and build artifacts
 cover: test  ## Run unit tests and open the coverage report
 	go tool cover -html=coverage.out
 
-.PHONY: compose
-compose: build-linux docker ## Run the docker-compose
-	docker-compose -f deploy/compose/progress.yml up
+.PHONY: dev
+dev: clean build-linux docker ## Clean, build, run docker compose for dev environment
+	docker-compose -f deploy/compose/dev.yml up
 
 .PHONY: docker
 docker:  ## Build the docker image locally

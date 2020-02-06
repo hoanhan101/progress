@@ -39,7 +39,7 @@ func Load() (*Config, error) {
 		}
 	}
 
-	// Load in the default config values
+	// Load in the default config values.
 	v.SetDefault("server.address", ":8000")
 
 	// Marshall config options into Config struct.
