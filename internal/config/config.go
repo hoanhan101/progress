@@ -5,15 +5,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config holds the application configurations.
 type Config struct {
 	Server   *ServerOptions   `json:"server"`
 	Database *DatabaseOptions `json:"database"`
 }
 
+// ServerOptions holds the server configurations.
 type ServerOptions struct {
 	Address string `json:"address"`
 }
 
+// DatabaseOptions holds the database configurations.
 type DatabaseOptions struct {
 	User     string `json:"user" pg:"user"`
 	Password string `json:"password" pg:"password"`

@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// System represents a row in system table.
 type System struct {
 	SystemID    string    `db:"system_id" json:"system_id"`
 	GoalID      string    `db:"goal_id" json:"goal_id"`

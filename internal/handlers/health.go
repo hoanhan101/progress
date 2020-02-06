@@ -8,6 +8,7 @@ import (
 	"github.com/hoanhan101/progress/internal/database"
 )
 
+// Health is the handler for `/health` endpoint.
 func (h *Handler) Health(c echo.Context) error {
 	resp := map[string]string{
 		"status": "ok",

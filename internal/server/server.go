@@ -9,6 +9,7 @@ import (
 	"github.com/hoanhan101/progress/internal/handlers"
 )
 
+// Start runs the server.
 func Start(cfg *config.Config, db *sqlx.DB) error {
 	server := echo.New()
 	handler := handlers.NewHandler(cfg, db)

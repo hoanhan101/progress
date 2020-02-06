@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // The database driver in use.
 
 	"github.com/hoanhan101/progress/internal/config"
 )

@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Goal represents a row in goal table.
 type Goal struct {
 	GoalID      string    `db:"goal_id" json:"goal_id"`
 	Name        string    `db:"name" json:"name"`
