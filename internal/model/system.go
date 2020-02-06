@@ -15,8 +15,8 @@ type System struct {
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
-// ListSystems get all systems in the table.
-func ListSystems(db *sqlx.DB) ([]System, error) {
+// GetSystems retrieves all systems from the table.
+func GetSystems(db *sqlx.DB) ([]System, error) {
 	systems := []System{}
 	const q = `SELECT * FROM systems;`
 
