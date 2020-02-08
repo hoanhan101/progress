@@ -15,20 +15,13 @@ func (h *Handler) CreateSystem(c echo.Context) error {
 		"name":    true,
 		"repeat":  false,
 	})
-
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	systems, err := model.CreateSystem(h.db, values["goal_id"], values["name"], values["repeat"])
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, systems)
@@ -38,10 +31,7 @@ func (h *Handler) CreateSystem(c echo.Context) error {
 func (h *Handler) GetSystems(c echo.Context) error {
 	systems, err := model.GetSystems(h.db)
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, systems)

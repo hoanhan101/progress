@@ -14,18 +14,12 @@ func (h *Handler) CreateGoal(c echo.Context) error {
 		"name": true,
 	})
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	goal, err := model.CreateGoal(h.db, values["name"])
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, goal)
@@ -35,10 +29,7 @@ func (h *Handler) CreateGoal(c echo.Context) error {
 func (h *Handler) GetGoals(c echo.Context) error {
 	goals, err := model.GetGoals(h.db)
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, goals)
@@ -50,18 +41,12 @@ func (h *Handler) GetGoal(c echo.Context) error {
 		"id": true,
 	})
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	goal, err := model.GetGoal(h.db, params["id"])
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, goal)
@@ -73,28 +58,19 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 		"id": true,
 	})
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	values, err := getFormValues(c, map[string]bool{
 		"name": true,
 	})
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	goal, err := model.UpdateGoal(h.db, params["id"], values["name"])
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusOK, goal)
@@ -106,18 +82,12 @@ func (h *Handler) DeleteGoal(c echo.Context) error {
 		"id": true,
 	})
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusBadRequest,
-			err.Error(),
-		)
+		return errBadRequest(err)
 	}
 
 	err = model.DeleteGoal(h.db, params["id"])
 	if err != nil {
-		return echo.NewHTTPError(
-			http.StatusInternalServerError,
-			err.Error(),
-		)
+		return errInternalServer(err)
 	}
 
 	return c.JSON(http.StatusNoContent, nil)
