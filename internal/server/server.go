@@ -28,6 +28,7 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	server.PUT("/goal/:id", handle.UpdateGoal)
 	server.DELETE("/goal/:id", handle.DeleteGoal)
 
+	server.POST("/system", handle.CreateSystem)
 	server.GET("/system", handle.GetSystems)
 
 	// Start the server.

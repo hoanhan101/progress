@@ -19,7 +19,9 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
 		Name:        name,
-		DateCreated: time.Now().UTC()}
+		DateCreated: time.Now().UTC(),
+	}
+
 	const q = `
 		INSERT INTO goals
 		(goal_id, name, date_created)

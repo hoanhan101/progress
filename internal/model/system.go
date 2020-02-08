@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -13,6 +14,28 @@ type System struct {
 	Name        string    `db:"name" json:"name"`
 	Repeat      string    `db:"repeat" json:"repeat"`
 	DateCreated time.Time `db:"date_created" json:"date_created"`
+}
+
+// CreateSystem creates a system in the table.
+func CreateSystem(db *sqlx.DB, goal_id string, name string, repeat string) (*System, error) {
+	s := System{
+		ID:          uuid.New().String(),
+		GoalID:      goal_id,
+		Name:        name,
+		Repeat:      repeat,
+		DateCreated: time.Now().UTC(),
+	}
+
+	const q = `
+		INSERT INTO systems
+		(system_id, goal_id, name, repeat, date_created)
+		VALUES ($1, $2, $3, $4, $5)`
+
+	if _, err := db.Exec(q, s.ID, s.GoalID, s.Name, s.Repeat, s.DateCreated); err != nil {
+		return nil, err
+	}
+
+	return &s, nil
 }
 
 // GetSystems retrieves all systems from the table.
