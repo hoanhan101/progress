@@ -1,30 +1,12 @@
 package handler
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/hoanhan101/progress/internal/model"
 )
-
-func getFormValues(c echo.Context, names map[string]bool) (map[string]string, error) {
-	values := map[string]string{}
-
-	for name, required := range names {
-		v := c.FormValue(name)
-
-		if v == "" && required == true {
-			return nil, errors.New(fmt.Sprintf("%v is not specified in the request body", name))
-		}
-
-		values[name] = v
-	}
-
-	return values, nil
-}
 
 // CreateSystem create a system in the system.
 func (h *Handler) CreateSystem(c echo.Context) error {

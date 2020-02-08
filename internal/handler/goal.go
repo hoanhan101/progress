@@ -10,15 +10,17 @@ import (
 
 // CreateGoal creates a goal in the system.
 func (h *Handler) CreateGoal(c echo.Context) error {
-	name := c.FormValue("name")
-	if name == "" {
+	values, err := getFormValues(c, map[string]bool{
+		"name": true,
+	})
+	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"name is not specified in the request body",
+			err.Error(),
 		)
 	}
 
-	goal, err := model.CreateGoal(h.db, name)
+	goal, err := model.CreateGoal(h.db, values["name"])
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -44,15 +46,17 @@ func (h *Handler) GetGoals(c echo.Context) error {
 
 // GetGoal gets a specified goal in the system.
 func (h *Handler) GetGoal(c echo.Context) error {
-	id := c.Param("id")
-	if id == "" {
+	params, err := getParams(c, map[string]bool{
+		"id": true,
+	})
+	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"id is not specified in the URI",
+			err.Error(),
 		)
 	}
 
-	goal, err := model.GetGoal(h.db, id)
+	goal, err := model.GetGoal(h.db, params["id"])
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -65,23 +69,27 @@ func (h *Handler) GetGoal(c echo.Context) error {
 
 // UpdateGoal updates a specified goal in the system.
 func (h *Handler) UpdateGoal(c echo.Context) error {
-	id := c.Param("id")
-	if id == "" {
+	params, err := getParams(c, map[string]bool{
+		"id": true,
+	})
+	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"id is not specified in the URI",
+			err.Error(),
 		)
 	}
 
-	name := c.FormValue("name")
-	if name == "" {
+	values, err := getFormValues(c, map[string]bool{
+		"name": true,
+	})
+	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"name is not specified in the request body",
+			err.Error(),
 		)
 	}
 
-	goal, err := model.UpdateGoal(h.db, id, name)
+	goal, err := model.UpdateGoal(h.db, params["id"], values["name"])
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
@@ -94,15 +102,17 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 
 // DeleteGoal deletes a specified goal in the system.
 func (h *Handler) DeleteGoal(c echo.Context) error {
-	id := c.Param("id")
-	if id == "" {
+	params, err := getParams(c, map[string]bool{
+		"id": true,
+	})
+	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusBadRequest,
-			"id is not specified in the URI",
+			err.Error(),
 		)
 	}
 
-	err := model.DeleteGoal(h.db, id)
+	err = model.DeleteGoal(h.db, params["id"])
 	if err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,
