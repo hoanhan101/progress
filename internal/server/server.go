@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,7 +12,6 @@ import (
 // Start runs the server.
 func Start(cfg *config.Config, db *sqlx.DB) error {
 	server := echo.New()
-	server.Validator = &CustomValidator{validator: validator.New()}
 	handle := handler.NewHandler(cfg, db)
 
 	// Register middleware.

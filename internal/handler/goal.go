@@ -15,7 +15,7 @@ func (h *Handler) CreateGoal(c echo.Context) error {
 		return errBadRequest(err)
 	}
 
-	if err := c.Validate(n); err != nil {
+	if err := h.validator.Struct(n); err != nil {
 		return errBadRequest(err)
 	}
 
