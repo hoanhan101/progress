@@ -34,6 +34,8 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	server.PUT("/system/:id", handle.UpdateSystem)
 	server.DELETE("/system/:id", handle.DeleteSystem)
 
+	server.GET("/progress", handle.GetProgresses)
+
 	// Start the server.
 	err := server.Start(cfg.Server.Address)
 	if err != nil {

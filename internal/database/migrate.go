@@ -24,9 +24,9 @@ var migrations = []darwin.Migration{
 		Description: "Create goals table",
 		Script: `
 CREATE TABLE goals (
-	goal_id      UUID,
-	name         TEXT,
-	date_created TIMESTAMP,
+	goal_id      UUID      NOT NULL,
+	name         TEXT      NOT NULL,
+	date_created TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (goal_id)
 );`,
@@ -36,14 +36,33 @@ CREATE TABLE goals (
 		Description: "Create systems table",
 		Script: `
 CREATE TABLE systems (
-	system_id    UUID,
-	goal_id      UUID,
-	name         TEXT,
-	repeat       TEXT,
-	date_created TIMESTAMP,
+	system_id    UUID      NOT NULL,
+	goal_id      UUID      NOT NULL,
+	name         TEXT      NOT NULL,
+	repeat       TEXT      NOT NULL,
+	date_created TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (system_id),
 	FOREIGN KEY (goal_id) REFERENCES goals(goal_id) ON DELETE CASCADE
+);`,
+	},
+	{
+		Version:     3,
+		Description: "Create progress table",
+		Script: `
+CREATE TABLE progress (
+	progress_id     UUID      NOT NULL,
+	system_id       UUID      NOT NULL,
+	date_created    TIMESTAMP NOT NULL,
+	summary         TEXT      NOT NULL,
+	completed       BOOLEAN   NOT NULL,
+	measurable_data INTEGER   NOT NULL,
+	measurable_unit TEXT      NOT NULL,
+	sets            INTEGER   NOT NULL,
+	reps            INTEGER   NOT NULL,
+	link            TEXT      NOT NULL,
+	PRIMARY KEY (progress_id),
+	FOREIGN KEY (system_id) REFERENCES systems(system_id) ON DELETE CASCADE
 );`,
 	},
 }
