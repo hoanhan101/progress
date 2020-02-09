@@ -10,14 +10,16 @@ import (
 
 // CreateGoal creates a goal in the system.
 func (h *Handler) CreateGoal(c echo.Context) error {
-	values, err := getFormValues(c, map[string]bool{
-		"name": true,
-	})
-	if err != nil {
+	n := new(model.NewGoal)
+	if err := c.Bind(n); err != nil {
 		return errBadRequest(err)
 	}
 
-	goal, err := model.CreateGoal(h.db, values["name"])
+	if err := c.Validate(n); err != nil {
+		return errBadRequest(err)
+	}
+
+	goal, err := model.CreateGoal(h.db, n)
 	if err != nil {
 		return errInternalServer(err)
 	}

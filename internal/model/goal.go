@@ -14,11 +14,16 @@ type Goal struct {
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
+// NewGoal is what required to create a new goal.
+type NewGoal struct {
+	Name string `json:"name" validate:"required"`
+}
+
 // CreateGoal creates a goal in the database.
-func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
+func CreateGoal(db *sqlx.DB, n *NewGoal) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
-		Name:        name,
+		Name:        n.Name,
 		DateCreated: time.Now().UTC(),
 	}
 
