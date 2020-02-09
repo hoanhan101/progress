@@ -7,14 +7,14 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// Goal represents a row in goal table.
+// Goal represents a row in goal database table.
 type Goal struct {
 	ID          string    `db:"goal_id" json:"goal_id"`
 	Name        string    `db:"name" json:"name"`
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
-// CreateGoal creates a goal in the table.
+// CreateGoal creates a goal in the database.
 func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
@@ -34,7 +34,7 @@ func CreateGoal(db *sqlx.DB, name string) (*Goal, error) {
 	return &g, nil
 }
 
-// GetGoals retrieves all goals from the table.
+// GetGoals retrieves all goals from the database.
 func GetGoals(db *sqlx.DB) ([]Goal, error) {
 	gs := []Goal{}
 	const q = `SELECT * FROM goals;`
@@ -46,7 +46,7 @@ func GetGoals(db *sqlx.DB) ([]Goal, error) {
 	return gs, nil
 }
 
-// GetGoal retrieves a goal from the table.
+// GetGoal retrieves a goal from the database.
 func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
 	var g Goal
 
@@ -62,7 +62,7 @@ func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
 	return &g, nil
 }
 
-// UpdateGoal updates a goal from the table.
+// UpdateGoal updates a goal from the database.
 func UpdateGoal(db *sqlx.DB, id string, name string) (*Goal, error) {
 	g, err := GetGoal(db, id)
 	if err != nil {
@@ -83,7 +83,7 @@ func UpdateGoal(db *sqlx.DB, id string, name string) (*Goal, error) {
 	return g, nil
 }
 
-// DeleteGoal deletes a goal from the table.
+// DeleteGoal deletes a goal from the database.
 func DeleteGoal(db *sqlx.DB, id string) error {
 	if _, err := uuid.Parse(id); err != nil {
 		return err

@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// System represents a row in system table.
+// System represents a row in system database table.
 type System struct {
 	ID          string    `db:"system_id" json:"system_id"`
 	GoalID      string    `db:"goal_id" json:"goal_id"`
@@ -16,7 +16,7 @@ type System struct {
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
-// CreateSystem creates a system in the table.
+// CreateSystem creates a system in the database.
 func CreateSystem(db *sqlx.DB, goal_id string, name string, repeat string) (*System, error) {
 	s := System{
 		ID:          uuid.New().String(),
@@ -38,7 +38,7 @@ func CreateSystem(db *sqlx.DB, goal_id string, name string, repeat string) (*Sys
 	return &s, nil
 }
 
-// GetSystems retrieves all systems from the table.
+// GetSystems retrieves all systems from the database.
 func GetSystems(db *sqlx.DB) ([]System, error) {
 	systems := []System{}
 	const q = `SELECT * FROM systems;`
@@ -50,7 +50,7 @@ func GetSystems(db *sqlx.DB) ([]System, error) {
 	return systems, nil
 }
 
-// GetSystem retrieves a system from the table.
+// GetSystem retrieves a system from the database.
 func GetSystem(db *sqlx.DB, id string) (*System, error) {
 	var s System
 
