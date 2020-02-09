@@ -65,3 +65,33 @@ func GetSystem(db *sqlx.DB, id string) (*System, error) {
 
 	return &s, nil
 }
+
+// UpdateSystem  updates a system from the database.
+func UpdateSystem(db *sqlx.DB, id string, name string, repeat string) (*System, error) {
+	s, err := GetSystem(db, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Only update if the given input is a non-zero value. Otherwise, use the
+	// existing value.
+	if name != "" {
+		s.Name = name
+	}
+
+	if repeat != "" {
+		s.Repeat = repeat
+	}
+
+	const q = `
+		UPDATE systems SET
+		"name" = $2,
+		"repeat" = $3
+		WHERE system_id = $1`
+
+	if _, err = db.Exec(q, id, s.Name, s.Repeat); err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
