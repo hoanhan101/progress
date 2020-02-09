@@ -49,3 +49,19 @@ func GetSystems(db *sqlx.DB) ([]System, error) {
 
 	return systems, nil
 }
+
+// GetSystem retrieves a system from the table.
+func GetSystem(db *sqlx.DB, id string) (*System, error) {
+	var s System
+
+	const q = `
+		SELECT *
+		FROM systems as s
+		WHERE s.system_id = $1`
+
+	if err := db.Get(&s, q, id); err != nil {
+		return nil, err
+	}
+
+	return &s, nil
+}

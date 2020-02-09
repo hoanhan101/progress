@@ -36,3 +36,20 @@ func (h *Handler) GetSystems(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, systems)
 }
+
+// GetSystem gets a specified system in the system.
+func (h *Handler) GetSystem(c echo.Context) error {
+	params, err := getParams(c, map[string]bool{
+		"id": true,
+	})
+	if err != nil {
+		return errBadRequest(err)
+	}
+
+	system, err := model.GetSystem(h.db, params["id"])
+	if err != nil {
+		return errInternalServer(err)
+	}
+
+	return c.JSON(http.StatusOK, system)
+}

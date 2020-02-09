@@ -30,6 +30,7 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 
 	server.POST("/system", handle.CreateSystem)
 	server.GET("/system", handle.GetSystems)
+	server.GET("/system/:id", handle.GetSystem)
 
 	// Start the server.
 	err := server.Start(cfg.Server.Address)
