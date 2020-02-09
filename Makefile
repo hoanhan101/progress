@@ -10,11 +10,11 @@ BUILD_DATE  := $(shell date -u +%Y-%m-%dT%T 2> /dev/null)
 
 .PHONY: build
 build:  ## Build the executable binary
-	go build -o ${BIN_NAME} cmd/progress.go
+	go build -o bin/${BIN_NAME} cmd/progress.go
 
 .PHONY: build-linux
 build-linux:  ## Build the executable binary for linux/amd64
-	GOARCH=amd64 GOOS=linux go build -o ${BIN_NAME} cmd/progress.go
+	GOARCH=amd64 GOOS=linux go build -o bin/${BIN_NAME} cmd/progress.go
 
 .PHONY: clean
 clean:  ## Remove temporary files and build artifacts
