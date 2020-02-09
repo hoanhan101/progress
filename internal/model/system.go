@@ -95,3 +95,18 @@ func UpdateSystem(db *sqlx.DB, id string, name string, repeat string) (*System, 
 
 	return s, nil
 }
+
+// DeleteSystem deletes a system from the database.
+func DeleteSystem(db *sqlx.DB, id string) error {
+	if _, err := uuid.Parse(id); err != nil {
+		return err
+	}
+
+	const q = `DELETE FROM systems WHERE system_id = $1`
+
+	if _, err := db.Exec(q, id); err != nil {
+		return err
+	}
+
+	return nil
+}

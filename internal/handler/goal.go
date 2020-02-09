@@ -90,5 +90,10 @@ func (h *Handler) DeleteGoal(c echo.Context) error {
 		return errInternalServer(err)
 	}
 
-	return c.JSON(http.StatusNoContent, nil)
+	return c.JSON(
+		http.StatusOK,
+		map[string]string{
+			"message": "deleted successfully",
+		},
+	)
 }

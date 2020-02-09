@@ -83,3 +83,25 @@ func (h *Handler) UpdateSystem(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, system)
 }
+
+// DeleteSystem deletes a specified system in the system.
+func (h *Handler) DeleteSystem(c echo.Context) error {
+	params, err := getParams(c, map[string]bool{
+		"id": true,
+	})
+	if err != nil {
+		return errBadRequest(err)
+	}
+
+	err = model.DeleteSystem(h.db, params["id"])
+	if err != nil {
+		return errInternalServer(err)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		map[string]string{
+			"message": "deleted successfully",
+		},
+	)
+}
