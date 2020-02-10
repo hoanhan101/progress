@@ -59,14 +59,16 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 		return errBadRequest(err)
 	}
 
-	values, err := getFormValues(c, map[string]bool{
-		"name": true,
-	})
-	if err != nil {
+	u := new(model.UpdatedGoal)
+	if err := c.Bind(u); err != nil {
 		return errBadRequest(err)
 	}
 
-	goal, err := model.UpdateGoal(h.db, id, values["name"])
+	if err := h.validator.Struct(u); err != nil {
+		return errBadRequest(err)
+	}
+
+	goal, err := model.UpdateGoal(h.db, id, u)
 	if err != nil {
 		return errInternalServer(err)
 	}

@@ -16,13 +16,26 @@ type System struct {
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
+// NewSystem is what required to create a new system.
+type NewSystem struct {
+	GoalID string `json:"goal_id" validate:"required"`
+	Name   string `json:"name" validate:"required"`
+	Repeat string `json:"repeat"`
+}
+
+// UpdatedSystem is what required to update a system.
+type UpdatedSystem struct {
+	Name   string `json:"name" validate:"required_without=Repeat"`
+	Repeat string `json:"repeat" validate:"required_without=Name"`
+}
+
 // CreateSystem creates a system in the database.
-func CreateSystem(db *sqlx.DB, goal_id string, name string, repeat string) (*System, error) {
+func CreateSystem(db *sqlx.DB, n *NewSystem) (*System, error) {
 	s := System{
 		ID:          uuid.New().String(),
-		GoalID:      goal_id,
-		Name:        name,
-		Repeat:      repeat,
+		GoalID:      n.GoalID,
+		Name:        n.Name,
+		Repeat:      n.Repeat,
 		DateCreated: time.Now().UTC(),
 	}
 
@@ -67,20 +80,19 @@ func GetSystem(db *sqlx.DB, id string) (*System, error) {
 }
 
 // UpdateSystem  updates a system from the database.
-func UpdateSystem(db *sqlx.DB, id string, name string, repeat string) (*System, error) {
+func UpdateSystem(db *sqlx.DB, id string, u *UpdatedSystem) (*System, error) {
 	s, err := GetSystem(db, id)
 	if err != nil {
 		return nil, err
 	}
 
-	// Only update if the given input is a non-zero value. Otherwise, use the
-	// existing value.
-	if name != "" {
-		s.Name = name
+	// Only update if the given value is not a non-zero value.
+	if u.Name != "" {
+		s.Name = u.Name
 	}
 
-	if repeat != "" {
-		s.Repeat = repeat
+	if u.Repeat != "" {
+		s.Repeat = u.Repeat
 	}
 
 	const q = `

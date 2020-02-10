@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,21 +10,21 @@ import (
 
 // CreateSystem create a system in the system.
 func (h *Handler) CreateSystem(c echo.Context) error {
-	values, err := getFormValues(c, map[string]bool{
-		"goal_id": true,
-		"name":    true,
-		"repeat":  false,
-	})
-	if err != nil {
+	n := new(model.NewSystem)
+	if err := c.Bind(n); err != nil {
 		return errBadRequest(err)
 	}
 
-	systems, err := model.CreateSystem(h.db, values["goal_id"], values["name"], values["repeat"])
+	if err := h.validator.Struct(n); err != nil {
+		return errBadRequest(err)
+	}
+
+	system, err := model.CreateSystem(h.db, n)
 	if err != nil {
 		return errInternalServer(err)
 	}
 
-	return c.JSON(http.StatusOK, systems)
+	return c.JSON(http.StatusOK, system)
 }
 
 // GetSystems gets all systems in the system.
@@ -60,19 +59,16 @@ func (h *Handler) UpdateSystem(c echo.Context) error {
 		return errBadRequest(err)
 	}
 
-	values, err := getFormValues(c, map[string]bool{
-		"name":   false,
-		"repeat": false,
-	})
-	if err != nil {
+	u := new(model.UpdatedSystem)
+	if err := c.Bind(u); err != nil {
 		return errBadRequest(err)
 	}
 
-	if values["name"] == "" && values["repeat"] == "" {
-		return errBadRequest(errors.New("either name or repeat value must be specified in the request body"))
+	if err := h.validator.Struct(u); err != nil {
+		return errBadRequest(err)
 	}
 
-	system, err := model.UpdateSystem(h.db, id, values["name"], values["repeat"])
+	system, err := model.UpdateSystem(h.db, id, u)
 	if err != nil {
 		return errInternalServer(err)
 	}

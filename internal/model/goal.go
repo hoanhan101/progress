@@ -19,6 +19,11 @@ type NewGoal struct {
 	Name string `json:"name" validate:"required"`
 }
 
+// UpdatedGoal is what required to update a goal.
+type UpdatedGoal struct {
+	Name string `json:"name" validate:"required"`
+}
+
 // CreateGoal creates a goal in the database.
 func CreateGoal(db *sqlx.DB, n *NewGoal) (*Goal, error) {
 	g := Goal{
@@ -68,13 +73,13 @@ func GetGoal(db *sqlx.DB, id string) (*Goal, error) {
 }
 
 // UpdateGoal updates a goal from the database.
-func UpdateGoal(db *sqlx.DB, id string, name string) (*Goal, error) {
+func UpdateGoal(db *sqlx.DB, id string, u *UpdatedGoal) (*Goal, error) {
 	g, err := GetGoal(db, id)
 	if err != nil {
 		return nil, err
 	}
 
-	g.Name = name
+	g.Name = u.Name
 
 	const q = `
 		UPDATE goals SET
