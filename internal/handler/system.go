@@ -40,14 +40,12 @@ func (h *Handler) GetSystems(c echo.Context) error {
 
 // GetSystem gets a specified system in the system.
 func (h *Handler) GetSystem(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
-	system, err := model.GetSystem(h.db, params["id"])
+	system, err := model.GetSystem(h.db, id)
 	if err != nil {
 		return errInternalServer(err)
 	}
@@ -57,10 +55,8 @@ func (h *Handler) GetSystem(c echo.Context) error {
 
 // UpdateSystem updates a specified system in the system.
 func (h *Handler) UpdateSystem(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
@@ -76,7 +72,7 @@ func (h *Handler) UpdateSystem(c echo.Context) error {
 		return errBadRequest(errors.New("either name or repeat value must be specified in the request body"))
 	}
 
-	system, err := model.UpdateSystem(h.db, params["id"], values["name"], values["repeat"])
+	system, err := model.UpdateSystem(h.db, id, values["name"], values["repeat"])
 	if err != nil {
 		return errInternalServer(err)
 	}
@@ -86,14 +82,12 @@ func (h *Handler) UpdateSystem(c echo.Context) error {
 
 // DeleteSystem deletes a specified system in the system.
 func (h *Handler) DeleteSystem(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
-	err = model.DeleteSystem(h.db, params["id"])
+	err := model.DeleteSystem(h.db, id)
 	if err != nil {
 		return errInternalServer(err)
 	}

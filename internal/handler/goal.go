@@ -39,14 +39,12 @@ func (h *Handler) GetGoals(c echo.Context) error {
 
 // GetGoal gets a specified goal in the system.
 func (h *Handler) GetGoal(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
-	goal, err := model.GetGoal(h.db, params["id"])
+	goal, err := model.GetGoal(h.db, id)
 	if err != nil {
 		return errInternalServer(err)
 	}
@@ -56,10 +54,8 @@ func (h *Handler) GetGoal(c echo.Context) error {
 
 // UpdateGoal updates a specified goal in the system.
 func (h *Handler) UpdateGoal(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
@@ -70,7 +66,7 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 		return errBadRequest(err)
 	}
 
-	goal, err := model.UpdateGoal(h.db, params["id"], values["name"])
+	goal, err := model.UpdateGoal(h.db, id, values["name"])
 	if err != nil {
 		return errInternalServer(err)
 	}
@@ -80,14 +76,12 @@ func (h *Handler) UpdateGoal(c echo.Context) error {
 
 // DeleteGoal deletes a specified goal in the system.
 func (h *Handler) DeleteGoal(c echo.Context) error {
-	params, err := getParams(c, map[string]bool{
-		"id": true,
-	})
-	if err != nil {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
 		return errBadRequest(err)
 	}
 
-	err = model.DeleteGoal(h.db, params["id"])
+	err := model.DeleteGoal(h.db, id)
 	if err != nil {
 		return errInternalServer(err)
 	}
