@@ -41,11 +41,13 @@ func TestHealth(t *testing.T) {
 }
 
 func TestGoal(t *testing.T) {
+	// GET /goal
 	goals := new([]model.Goal)
 	_, err := request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*goals))
 
+	// POST /goal/:id
 	newGoal := new(model.Goal)
 	_, err = request.SetBody(map[string]interface{}{"name": "foo"}).SetResult(newGoal).Post("/goal")
 	assert.NoError(t, err)
@@ -53,6 +55,7 @@ func TestGoal(t *testing.T) {
 	assert.Equal(t, "foo", newGoal.Name)
 	assert.NotNil(t, newGoal.DateCreated)
 
+	// GET /goal
 	_, err = request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(*goals))
@@ -63,6 +66,7 @@ func TestGoal(t *testing.T) {
 		assert.NotNil(t, newGoal.DateCreated)
 	}
 
+	// GET /goal/:id
 	goal := new(model.Goal)
 	_, err = request.SetResult(goal).Get("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
@@ -70,6 +74,7 @@ func TestGoal(t *testing.T) {
 	assert.Equal(t, newGoal.Name, goal.Name)
 	assert.NotNil(t, newGoal.DateCreated)
 
+	// PUT /goal/:id
 	putGoal := new(model.Goal)
 	_, err = request.SetBody(map[string]interface{}{"name": "bar"}).SetResult(putGoal).Put("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
@@ -79,6 +84,7 @@ func TestGoal(t *testing.T) {
 	assert.NotEqual(t, newGoal.Name, putGoal.Name)
 	assert.Equal(t, newGoal.ID, putGoal.ID)
 
+	// DELETE /goal/:id
 	status := &struct {
 		Message string
 	}{}
@@ -86,7 +92,19 @@ func TestGoal(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "deleted successfully", status.Message)
 
+	// GET /goal
 	_, err = request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*goals))
+
+	// ERROR
+	_, err = request.SetError(status).Get("/goal/" + newGoal.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, "sql: no rows in result set", status.Message)
+
+	_, err = request.SetBody(map[string]interface{}{"name": "foobar"}).SetError(putGoal).Put("/goal/" + newGoal.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, "sql: no rows in result set", status.Message)
+
+	// FIMXE - delete should error out too
 }
