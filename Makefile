@@ -22,7 +22,7 @@ clean:  ## Remove temporary files and build artifacts
 	rm -f ${BIN_NAME} coverage.out
 
 .PHONY: cover
-cover: test  ## Run unit tests and open the coverage report
+cover: test-unit  ## Run unit tests and open the coverage report
 	go tool cover -html=coverage.out
 
 .PHONY: dev
@@ -41,16 +41,16 @@ docker:  ## Build the docker image locally
 lint:  ## Lint project source files
 	golint -set_exit_status ./...
 
-.PHONY: test
-test:  ## Run unit tests
-	go test -short -race -coverprofile=coverage.out -covermode=atomic ./...
+.PHONY: test-unit
+test-unit:  ## Run unit tests
+	go test -race -cover -run Unit -coverprofile=coverage.out -covermode=atomic ./...
 
-.PHONY: test-e2e
-test-e2e:  ## Run end-to-end tests
+.PHONY: test-end
+test-end:  ## Run end-to-end tests
 	-docker-compose -f deploy/compose/dev.yml rm -fsv
 	docker-compose -f deploy/compose/dev.yml up -d
 	sleep 6
-	go test cmd/progress_test.go || (docker-compose -f deploy/compose/dev.yml stop; exit 1)
+	go test -race -cover -run E2E ./... || (docker-compose -f deploy/compose/dev.yml stop; exit 1)
 	docker-compose -f deploy/compose/dev.yml down
 
 .PHONY: version

@@ -19,7 +19,7 @@ import (
 
 var request = resty.New().SetHostURL("http://localhost:8000").R()
 
-func TestConfig(t *testing.T) {
+func TestE2EConfig(t *testing.T) {
 	cfg := new(config.Config)
 	_, err := request.SetResult(cfg).Get("/config")
 	assert.NoError(t, err)
@@ -31,7 +31,7 @@ func TestConfig(t *testing.T) {
 	assert.Equal(t, "disable", cfg.Database.SSLMode)
 }
 
-func TestHealth(t *testing.T) {
+func TestE2EHealth(t *testing.T) {
 	health := &struct {
 		Status string
 	}{}
@@ -40,7 +40,7 @@ func TestHealth(t *testing.T) {
 	assert.Equal(t, "ok", health.Status)
 }
 
-func TestGoal(t *testing.T) {
+func TestE2EGoal(t *testing.T) {
 	// GET /goal
 	goals := new([]model.Goal)
 	_, err := request.SetResult(goals).Get("/goal")
