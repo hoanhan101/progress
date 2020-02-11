@@ -32,12 +32,8 @@ func run() error {
 	}
 	defer db.Close()
 
-	// Bring the schema up to date and load the seed data.
+	// Bring the schema up to date.
 	if err := database.Migrate(db); err != nil {
-		return err
-	}
-
-	if err := database.Seed(db); err != nil {
 		return err
 	}
 
