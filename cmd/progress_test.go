@@ -1,6 +1,6 @@
 /*
-	These tests are designed to run against an instance of Progress API
-	with a PostgreSQL data store backing configured.
+	These tests are designed to run against an instance of Progress with
+	a PostgreSQL data store backing configured.
 
 	The goal is to provide the end-to-end validation of all components.
 */
