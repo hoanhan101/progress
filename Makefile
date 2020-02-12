@@ -39,7 +39,7 @@ docker:  ## Build the docker image locally
 
 .PHONY: lint
 lint:  ## Lint project source files
-	golint -set_exit_status ./...
+	golangci-lint run
 
 .PHONY: test-unit
 test-unit:  ## Run unit tests
