@@ -95,7 +95,8 @@ func UpdateGoal(db *sqlx.DB, id string, u *UpdatedGoal) (*Goal, error) {
 
 // DeleteGoal deletes a goal from the database.
 func DeleteGoal(db *sqlx.DB, id string) error {
-	if _, err := uuid.Parse(id); err != nil {
+	_, err := GetGoal(db, id)
+	if err != nil {
 		return err
 	}
 

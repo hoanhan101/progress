@@ -106,5 +106,7 @@ func TestE2EGoal(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "sql: no rows in result set", status.Message)
 
-	// FIMXE - delete should error out too
+	_, err = request.SetError(status).Delete("/goal/" + newGoal.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, "sql: no rows in result set", status.Message)
 }
