@@ -12,6 +12,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.4.0
-	go.opencensus.io v0.22.3 // indirect
+	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/resty.v1 v1.12.0
 )
