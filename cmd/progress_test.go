@@ -41,13 +41,13 @@ func TestE2EHealth(t *testing.T) {
 }
 
 func TestE2EGoal(t *testing.T) {
-	// GET /goal
+	// Get all goals.
 	goals := new([]model.Goal)
 	_, err := request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*goals))
 
-	// POST /goal/:id
+	// Create a new goal.
 	newGoal := new(model.Goal)
 	_, err = request.SetBody(map[string]interface{}{"name": "foo"}).SetResult(newGoal).Post("/goal")
 	assert.NoError(t, err)
@@ -55,7 +55,7 @@ func TestE2EGoal(t *testing.T) {
 	assert.Equal(t, "foo", newGoal.Name)
 	assert.NotNil(t, newGoal.DateCreated)
 
-	// GET /goal
+	// Check if the new goal is added.
 	_, err = request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(*goals))
@@ -66,7 +66,7 @@ func TestE2EGoal(t *testing.T) {
 		assert.NotNil(t, newGoal.DateCreated)
 	}
 
-	// GET /goal/:id
+	// Get the new goal.
 	goal := new(model.Goal)
 	_, err = request.SetResult(goal).Get("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
@@ -74,7 +74,7 @@ func TestE2EGoal(t *testing.T) {
 	assert.Equal(t, newGoal.Name, goal.Name)
 	assert.NotNil(t, newGoal.DateCreated)
 
-	// PUT /goal/:id
+	// Update the new goal.
 	putGoal := new(model.Goal)
 	_, err = request.SetBody(map[string]interface{}{"name": "bar"}).SetResult(putGoal).Put("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
@@ -84,7 +84,7 @@ func TestE2EGoal(t *testing.T) {
 	assert.NotEqual(t, newGoal.Name, putGoal.Name)
 	assert.Equal(t, newGoal.ID, putGoal.ID)
 
-	// DELETE /goal/:id
+	// Delete the new goal.
 	status := &struct {
 		Message string
 	}{}
@@ -92,15 +92,19 @@ func TestE2EGoal(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "deleted successfully", status.Message)
 
-	// GET /goal
+	// Check if there is nothing in the system now.
 	_, err = request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*goals))
 
-	// ERROR
+	// Catch the error.
 	_, err = request.SetError(status).Get("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, "sql: no rows in result set", status.Message)
+
+	// _, err = request.SetError(status).Post("/goal")
+	// assert.NoError(t, err)
+	// assert.Equal(t, "sql: no rows in result set", status.Message)
 
 	_, err = request.SetBody(map[string]interface{}{"name": "foobar"}).SetError(putGoal).Put("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
