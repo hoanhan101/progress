@@ -34,6 +34,7 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	server.PUT("/system/:id", handle.UpdateSystem)
 	server.DELETE("/system/:id", handle.DeleteSystem)
 
+	server.POST("/progress", handle.CreateProgress)
 	server.GET("/progress", handle.GetProgresses)
 
 	// Start the server.

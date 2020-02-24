@@ -54,14 +54,14 @@ CREATE TABLE systems (
 CREATE TABLE progress (
 	progress_id     UUID      NOT NULL,
 	system_id       UUID      NOT NULL,
-	date_created    TIMESTAMP NOT NULL,
-	summary         TEXT      NOT NULL,
+	context         TEXT      NOT NULL,
 	completed       BOOLEAN   NOT NULL,
 	measurable_data INTEGER   NOT NULL,
 	measurable_unit TEXT      NOT NULL,
 	sets            INTEGER   NOT NULL,
 	reps            INTEGER   NOT NULL,
 	link            TEXT      NOT NULL,
+	date_created    TIMESTAMP NOT NULL,
 	PRIMARY KEY (progress_id),
 	FOREIGN KEY (system_id) REFERENCES systems(system_id) ON DELETE CASCADE
 );`,
