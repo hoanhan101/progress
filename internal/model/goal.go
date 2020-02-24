@@ -11,17 +11,20 @@ import (
 type Goal struct {
 	ID          string    `db:"goal_id" json:"goal_id"`
 	Name        string    `db:"name" json:"name"`
+	Context     string    `db:"context" json:"context"`
 	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
 // NewGoal is what required to create a new goal.
 type NewGoal struct {
-	Name string `json:"name" validate:"required"`
+	Name    string `json:"name" validate:"required"`
+	Context string `json:"context"`
 }
 
 // UpdatedGoal is what required to update a goal.
 type UpdatedGoal struct {
-	Name string `json:"name" validate:"required"`
+	Name    string `json:"name" validate:"required_without=Context"`
+	Context string `json:"context" validate:"required_without=Name"`
 }
 
 // CreateGoal creates a goal in the database.
@@ -29,15 +32,16 @@ func CreateGoal(db *sqlx.DB, n *NewGoal) (*Goal, error) {
 	g := Goal{
 		ID:          uuid.New().String(),
 		Name:        n.Name,
+		Context:     n.Context,
 		DateCreated: time.Now().UTC(),
 	}
 
 	const q = `
 		INSERT INTO goals
-		(goal_id, name, date_created)
-		VALUES ($1, $2, $3)`
+		(goal_id, name, context, date_created)
+		VALUES ($1, $2, $3, $4)`
 
-	if _, err := db.Exec(q, g.ID, g.Name, g.DateCreated); err != nil {
+	if _, err := db.Exec(q, g.ID, g.Name, g.Context, g.DateCreated); err != nil {
 		return nil, err
 	}
 
@@ -79,14 +83,22 @@ func UpdateGoal(db *sqlx.DB, id string, u *UpdatedGoal) (*Goal, error) {
 		return nil, err
 	}
 
-	g.Name = u.Name
+	// Only update if the given value is not a non-zero value.
+	if u.Name != "" {
+		g.Name = u.Name
+	}
+
+	if u.Context != "" {
+		g.Context = u.Context
+	}
 
 	const q = `
 		UPDATE goals SET
-		"name" = $2
+		"name" = $2,
+		"context" = $3
 		WHERE goal_id = $1`
 
-	if _, err = db.Exec(q, id, g.Name); err != nil {
+	if _, err = db.Exec(q, id, g.Name, g.Context); err != nil {
 		return nil, err
 	}
 

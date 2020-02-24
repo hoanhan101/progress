@@ -26,6 +26,7 @@ var migrations = []darwin.Migration{
 CREATE TABLE goals (
 	goal_id      UUID      NOT NULL,
 	name         TEXT      NOT NULL,
+	context      TEXT      NOT NULL,
 	date_created TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (goal_id)

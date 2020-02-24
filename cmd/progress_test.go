@@ -55,10 +55,11 @@ func TestE2ESuccess(t *testing.T) {
 
 	// Create a new goal.
 	newGoal := new(model.Goal)
-	_, err = request.SetBody(map[string]interface{}{"name": "new goal"}).SetResult(newGoal).Post("/goal")
+	_, err = request.SetBody(map[string]interface{}{"name": "new goal", "context": "new context"}).SetResult(newGoal).Post("/goal")
 	assert.NoError(t, err)
 	assert.NotNil(t, newGoal.ID)
 	assert.Equal(t, "new goal", newGoal.Name)
+	assert.Equal(t, "new context", newGoal.Context)
 	assert.NotNil(t, newGoal.DateCreated)
 
 	// Create a new system.
@@ -115,10 +116,11 @@ func TestE2ESuccess(t *testing.T) {
 
 	// Update the new goal.
 	putGoal := new(model.Goal)
-	_, err = request.SetBody(map[string]interface{}{"name": "updated goal"}).SetResult(putGoal).Put("/goal/" + newGoal.ID)
+	_, err = request.SetBody(map[string]interface{}{"name": "updated goal", "context": "updated context"}).SetResult(putGoal).Put("/goal/" + newGoal.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, newGoal.ID, putGoal.ID)
 	assert.Equal(t, "updated goal", putGoal.Name)
+	assert.Equal(t, "updated context", putGoal.Context)
 	assert.NotNil(t, putGoal.DateCreated)
 
 	// Update the new system.
