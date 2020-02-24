@@ -61,7 +61,7 @@ CREATE TABLE progress (
 	sets            INTEGER   NOT NULL,
 	reps            INTEGER   NOT NULL,
 	link            TEXT      NOT NULL,
-	date_created    TIMESTAMP NOT NULL,
+	date_created    DATE      NOT NULL,
 	PRIMARY KEY (progress_id),
 	FOREIGN KEY (system_id) REFERENCES systems(system_id) ON DELETE CASCADE
 );`,
