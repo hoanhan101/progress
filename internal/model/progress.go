@@ -175,3 +175,18 @@ func UpdateProgress(db *sqlx.DB, id string, u *UpdatedProgress) (*Progress, erro
 
 	return p, nil
 }
+
+// DeleteProgress deletes a progress from the database.
+func DeleteProgress(db *sqlx.DB, id string) error {
+	if _, err := uuid.Parse(id); err != nil {
+		return err
+	}
+
+	const q = `DELETE FROM progress WHERE progress_id = $1`
+
+	if _, err := db.Exec(q, id); err != nil {
+		return err
+	}
+
+	return nil
+}

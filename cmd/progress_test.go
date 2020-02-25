@@ -237,7 +237,10 @@ func TestE2ESuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "deleted successfully", status.Message)
 
-	// TODO - Delete the new progress
+	// Delete the new progress
+	_, err = request.SetResult(status).Delete("/progress/" + newProgress.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, "deleted successfully", status.Message)
 
 	// Check if there is no goal.
 	_, err = request.SetResult(goals).Get("/goal")
@@ -249,7 +252,10 @@ func TestE2ESuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*systems))
 
-	// TODO - Check if there is no progress.
+	// Check if there is no progress.
+	_, err = request.SetResult(progresses).Get("/progress")
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(*progresses))
 }
 
 func TestE2EGoalError(t *testing.T) {

@@ -75,3 +75,23 @@ func (h *Handler) UpdateProgress(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, progress)
 }
+
+// DeleteProgress deletes a specified progress in the system.
+func (h *Handler) DeleteProgress(c echo.Context) error {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
+		return errBadRequest(err)
+	}
+
+	err := model.DeleteProgress(h.db, id)
+	if err != nil {
+		return errInternalServer(err)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		map[string]string{
+			"message": "deleted successfully",
+		},
+	)
+}
