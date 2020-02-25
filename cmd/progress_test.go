@@ -80,7 +80,7 @@ func TestE2ESuccess(t *testing.T) {
 	for _, g := range *goals {
 		assert.Equal(t, newGoal.ID, g.ID)
 		assert.Equal(t, newGoal.Name, g.Name)
-		assert.NotNil(t, g.DateCreated)
+		assert.Equal(t, newGoal.DateCreated.Day(), g.DateCreated.Day())
 	}
 
 	// Check if the new system is added.
@@ -93,7 +93,7 @@ func TestE2ESuccess(t *testing.T) {
 		assert.Equal(t, newSystem.GoalID, s.GoalID)
 		assert.Equal(t, newSystem.Name, s.Name)
 		assert.Equal(t, newSystem.Repeat, s.Repeat)
-		assert.NotNil(t, s.DateCreated)
+		assert.Equal(t, newSystem.DateCreated.Day(), s.DateCreated.Day())
 	}
 
 	// Get the new goal.
