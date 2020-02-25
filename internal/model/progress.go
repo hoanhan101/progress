@@ -88,3 +88,19 @@ func GetProgresses(db *sqlx.DB) ([]Progress, error) {
 
 	return progress, nil
 }
+
+// GetProgress retrieves a progress from the database.
+func GetProgress(db *sqlx.DB, id string) (*Progress, error) {
+	var p Progress
+
+	const q = `
+		SELECT *
+		FROM progress as p
+		WHERE p.progress_id = $1`
+
+	if err := db.Get(&p, q, id); err != nil {
+		return nil, err
+	}
+
+	return &p, nil
+}

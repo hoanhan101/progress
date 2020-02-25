@@ -36,3 +36,18 @@ func (h *Handler) GetProgresses(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, progress)
 }
+
+// GetProgress gets a specified progress in the system.
+func (h *Handler) GetProgress(c echo.Context) error {
+	id := c.Param("id")
+	if err := h.validator.Var(id, "required"); err != nil {
+		return errBadRequest(err)
+	}
+
+	progress, err := model.GetProgress(h.db, id)
+	if err != nil {
+		return errInternalServer(err)
+	}
+
+	return c.JSON(http.StatusOK, progress)
+}

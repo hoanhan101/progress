@@ -164,7 +164,19 @@ func TestE2ESuccess(t *testing.T) {
 	assert.Equal(t, newSystem.Repeat, system.Repeat)
 	assert.NotNil(t, system.DateCreated)
 
-	// TODO - Get the new progress
+	// Get the new progress.
+	progress := new(model.Progress)
+	_, err = request.SetResult(progress).Get("/progress/" + newProgress.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, newProgress.ID, progress.ID)
+	assert.Equal(t, newProgress.SystemID, progress.SystemID)
+	assert.Equal(t, newProgress.Context, progress.Context)
+	assert.Equal(t, newProgress.Completed, progress.Completed)
+	assert.Equal(t, newProgress.MeasurableData, progress.MeasurableData)
+	assert.Equal(t, newProgress.MeasurableUnit, progress.MeasurableUnit)
+	assert.Equal(t, newProgress.Sets, progress.Sets)
+	assert.Equal(t, newProgress.Reps, progress.Reps)
+	assert.Equal(t, newProgress.DateCreated.Day(), progress.DateCreated.Day())
 
 	// Update the new goal.
 	putGoal := new(model.Goal)
