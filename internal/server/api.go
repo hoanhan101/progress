@@ -37,6 +37,7 @@ func Start(cfg *config.Config, db *sqlx.DB) error {
 	server.POST("/progress", handle.CreateProgress)
 	server.GET("/progress", handle.GetProgresses)
 	server.GET("/progress/:id", handle.GetProgress)
+	server.PUT("/progress/:id", handle.UpdateProgress)
 
 	// Start the server.
 	err := server.Start(cfg.Server.Address)

@@ -34,6 +34,18 @@ type NewProgress struct {
 	DateCreated    time.Time `json:"date_created"`
 }
 
+// UpdatedProgress is what required to update a progress.
+type UpdatedProgress struct {
+	Context        string    `json:"context" validate:"required_without=Completed MeasurableData MeasurableUnit Sets Reps Link DateCreated"`
+	Completed      bool      `json:"completed" validate:"required_without=Context MeasurableData MeasurableUnit Sets Reps Link DateCreated"`
+	MeasurableData int       `json:"measurable_data" validate:"required_without=Context Completed MeasurableUnit Sets Reps Link DateCreated"`
+	MeasurableUnit string    `json:"measurable_unit" validate:"required_without=Context Completed MeasurableData Sets Reps Link DateCreated"`
+	Sets           int       `json:"sets" validate:"required_without=Context Completed MeasurableData MeasurableUnit Reps Link DateCreated"`
+	Reps           int       `json:"reps" validate:"required_without=Context Completed MeasurableData MeasurableUnit Sets Link DateCreated"`
+	Link           string    `json:"link" validate:"required_without=Context Completed MeasurableData MeasurableUnit Sets Reps DateCreated"`
+	DateCreated    time.Time `json:"date_created" validate:"required_without=Context Completed MeasurableData MeasurableUnit Sets Reps Link"`
+}
+
 // CreateProgress creates a progress in the database.
 func CreateProgress(db *sqlx.DB, n *NewProgress) (*Progress, error) {
 	p := Progress{
@@ -103,4 +115,63 @@ func GetProgress(db *sqlx.DB, id string) (*Progress, error) {
 	}
 
 	return &p, nil
+}
+
+// UpdateProgress updates a progress from the database.
+func UpdateProgress(db *sqlx.DB, id string, u *UpdatedProgress) (*Progress, error) {
+	p, err := GetProgress(db, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Only update if the given value is not a non-zero value.
+	if u.Context != "" {
+		p.Context = u.Context
+	}
+
+	if u.Completed != false {
+		p.Completed = u.Completed
+	}
+
+	if u.MeasurableData != 0 {
+		p.MeasurableData = u.MeasurableData
+	}
+
+	if u.MeasurableUnit != "" {
+		p.MeasurableUnit = u.MeasurableUnit
+	}
+
+	if u.Sets != 0 {
+		p.Sets = u.Sets
+	}
+
+	if u.Reps != 0 {
+		p.Reps = u.Reps
+	}
+
+	if u.Link != "" {
+		p.Link = u.Link
+	}
+
+	if !u.DateCreated.IsZero() {
+		p.DateCreated = u.DateCreated
+	}
+
+	const q = `
+		UPDATE progress SET
+		"context" = $2,
+		"completed" = $3,
+		"measurable_data" = $4,
+		"measurable_unit" = $5,
+		"sets" = $6,
+		"reps" = $7,
+		"link" = $8,
+		"date_created" = $9
+		WHERE progress_id = $1`
+
+	if _, err = db.Exec(q, id, p.Context, p.Completed, p.MeasurableData, p.MeasurableUnit, p.Sets, p.Reps, p.Link, p.DateCreated); err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }

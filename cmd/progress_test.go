@@ -189,7 +189,7 @@ func TestE2ESuccess(t *testing.T) {
 
 	// Update the new system.
 	putSystem := new(model.System)
-	_, err = request.SetBody(map[string]interface{}{"goal_id": newGoal.ID, "name": "updated system", "repeat": "every week"}).SetResult(putSystem).Put("/system/" + newSystem.ID)
+	_, err = request.SetBody(map[string]interface{}{"name": "updated system", "repeat": "every week"}).SetResult(putSystem).Put("/system/" + newSystem.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, newSystem.ID, putSystem.ID)
 	assert.Equal(t, newGoal.ID, putSystem.GoalID)
@@ -197,7 +197,32 @@ func TestE2ESuccess(t *testing.T) {
 	assert.Equal(t, "every week", putSystem.Repeat)
 	assert.NotNil(t, putGoal.DateCreated)
 
-	// TODO - Update the new progress
+	// Update the new progress
+	putProgress := new(model.Progress)
+	_, err = request.
+		SetBody(
+			map[string]interface{}{
+				"context":         "updated progress",
+				"completed":       true,
+				"measurable_data": 66,
+				"measurable_unit": "kg",
+				"sets":            6,
+				"reps":            6,
+				"link":            "link.com",
+				"date_created":    "2020-06-16T00:00:00Z",
+			}).
+		SetResult(putProgress).
+		Put("/progress/" + newProgress.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, newProgress.ID, putProgress.ID)
+	assert.Equal(t, "updated progress", putProgress.Context)
+	assert.True(t, putProgress.Completed)
+	assert.Equal(t, 66, putProgress.MeasurableData)
+	assert.Equal(t, "kg", putProgress.MeasurableUnit)
+	assert.Equal(t, 6, putProgress.Sets)
+	assert.Equal(t, 6, putProgress.Reps)
+	assert.Equal(t, "link.com", putProgress.Link)
+	assert.Equal(t, 16, putProgress.DateCreated.Day())
 
 	// Delete the new goal.
 	status := &struct {

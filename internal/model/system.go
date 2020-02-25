@@ -79,7 +79,7 @@ func GetSystem(db *sqlx.DB, id string) (*System, error) {
 	return &s, nil
 }
 
-// UpdateSystem  updates a system from the database.
+// UpdateSystem updates a system from the database.
 func UpdateSystem(db *sqlx.DB, id string, u *UpdatedSystem) (*System, error) {
 	s, err := GetSystem(db, id)
 	if err != nil {
