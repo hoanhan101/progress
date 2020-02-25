@@ -9,29 +9,29 @@ import (
 
 // Progress represents a row in progress database table.
 type Progress struct {
-	ID             string `db:"progress_id" json:"progress_id"`
-	SystemID       string `db:"system_id" json:"system_id"`
-	Context        string `db:"context" json:"context"`
-	Completed      bool   `db:"completed" json:"completed"`
-	MeasurableData int    `db:"measurable_data" json:"measurable_data"`
-	MeasurableUnit string `db:"measurable_unit" json:"measurable_unit"`
-	Sets           int    `db:"sets" json:"sets"`
-	Reps           int    `db:"reps" json:"reps"`
-	Link           string `db:"link" json:"link"`
-	DateCreated    string `db:"date_created" json:"date_created"`
+	ID             string    `db:"progress_id" json:"progress_id"`
+	SystemID       string    `db:"system_id" json:"system_id"`
+	Context        string    `db:"context" json:"context"`
+	Completed      bool      `db:"completed" json:"completed"`
+	MeasurableData int       `db:"measurable_data" json:"measurable_data"`
+	MeasurableUnit string    `db:"measurable_unit" json:"measurable_unit"`
+	Sets           int       `db:"sets" json:"sets"`
+	Reps           int       `db:"reps" json:"reps"`
+	Link           string    `db:"link" json:"link"`
+	DateCreated    time.Time `db:"date_created" json:"date_created"`
 }
 
 // NewProgress is what required to create a new progress.
 type NewProgress struct {
-	SystemID       string `json:"system_id" validate:"required"`
-	Context        string `json:"context"`
-	Completed      bool   `json:"completed" validate:"required"`
-	MeasurableData int    `json:"measurable_data"`
-	MeasurableUnit string `json:"measurable_unit"`
-	Sets           int    `json:"sets"`
-	Reps           int    `json:"reps"`
-	Link           string `json:"link"`
-	DateCreated    string `json:"date_created"`
+	SystemID       string    `json:"system_id" validate:"required"`
+	Context        string    `json:"context"`
+	Completed      bool      `json:"completed" validate:"required"`
+	MeasurableData int       `json:"measurable_data"`
+	MeasurableUnit string    `json:"measurable_unit"`
+	Sets           int       `json:"sets"`
+	Reps           int       `json:"reps"`
+	Link           string    `json:"link"`
+	DateCreated    time.Time `json:"date_created"`
 }
 
 // CreateProgress creates a progress in the database.
@@ -47,8 +47,8 @@ func CreateProgress(db *sqlx.DB, n *NewProgress) (*Progress, error) {
 	}
 
 	// NOTE - there might be a better way to set defaults.
-	if n.DateCreated == "" {
-		p.DateCreated = time.Now().Format("01-02-2006")
+	if n.DateCreated.IsZero() {
+		p.DateCreated = time.Now()
 	} else {
 		p.DateCreated = n.DateCreated
 	}

@@ -9,10 +9,10 @@ import (
 
 // Goal represents a row in goal database table.
 type Goal struct {
-	ID          string `db:"goal_id" json:"goal_id"`
-	Name        string `db:"name" json:"name"`
-	Context     string `db:"context" json:"context"`
-	DateCreated string `db:"date_created" json:"date_created"`
+	ID          string    `db:"goal_id" json:"goal_id"`
+	Name        string    `db:"name" json:"name"`
+	Context     string    `db:"context" json:"context"`
+	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
 // NewGoal is what required to create a new goal.
@@ -33,7 +33,7 @@ func CreateGoal(db *sqlx.DB, n *NewGoal) (*Goal, error) {
 		ID:          uuid.New().String(),
 		Name:        n.Name,
 		Context:     n.Context,
-		DateCreated: time.Now().Format("01-02-2006"),
+		DateCreated: time.Now(),
 	}
 
 	const q = `

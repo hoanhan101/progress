@@ -27,7 +27,7 @@ CREATE TABLE goals (
 	goal_id      UUID      NOT NULL,
 	name         TEXT      NOT NULL,
 	context      TEXT      NOT NULL,
-	date_created DATE      NOT NULL,
+	date_created TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (goal_id)
 );`,
@@ -41,7 +41,7 @@ CREATE TABLE systems (
 	goal_id      UUID      NOT NULL,
 	name         TEXT      NOT NULL,
 	repeat       TEXT      NOT NULL,
-	date_created DATE      NOT NULL,
+	date_created TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (system_id),
 	FOREIGN KEY (goal_id) REFERENCES goals(goal_id) ON DELETE CASCADE
@@ -61,7 +61,7 @@ CREATE TABLE progress (
 	sets            INTEGER   NOT NULL,
 	reps            INTEGER   NOT NULL,
 	link            TEXT      NOT NULL,
-	date_created    DATE      NOT NULL,
+	date_created    TIMESTAMP NOT NULL,
 	PRIMARY KEY (progress_id),
 	FOREIGN KEY (system_id) REFERENCES systems(system_id) ON DELETE CASCADE
 );`,

@@ -9,11 +9,11 @@ import (
 
 // System represents a row in system database table.
 type System struct {
-	ID          string `db:"system_id" json:"system_id"`
-	GoalID      string `db:"goal_id" json:"goal_id"`
-	Name        string `db:"name" json:"name"`
-	Repeat      string `db:"repeat" json:"repeat"`
-	DateCreated string `db:"date_created" json:"date_created"`
+	ID          string    `db:"system_id" json:"system_id"`
+	GoalID      string    `db:"goal_id" json:"goal_id"`
+	Name        string    `db:"name" json:"name"`
+	Repeat      string    `db:"repeat" json:"repeat"`
+	DateCreated time.Time `db:"date_created" json:"date_created"`
 }
 
 // NewSystem is what required to create a new system.
@@ -36,7 +36,7 @@ func CreateSystem(db *sqlx.DB, n *NewSystem) (*System, error) {
 		GoalID:      n.GoalID,
 		Name:        n.Name,
 		Repeat:      n.Repeat,
-		DateCreated: time.Now().Format("01-02-2006"),
+		DateCreated: time.Now(),
 	}
 
 	const q = `
