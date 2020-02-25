@@ -19,6 +19,15 @@ import (
 
 var request = resty.New().SetHostURL("http://localhost:8000").R()
 
+func TestE2EHealth(t *testing.T) {
+	health := &struct {
+		Status string
+	}{}
+	_, err := request.SetResult(health).Get("/health")
+	assert.NoError(t, err)
+	assert.Equal(t, "ok", health.Status)
+}
+
 func TestE2EConfig(t *testing.T) {
 	cfg := new(config.Config)
 	_, err := request.SetResult(cfg).Get("/config")
@@ -29,15 +38,6 @@ func TestE2EConfig(t *testing.T) {
 	assert.Equal(t, "postgres", cfg.Database.Host)
 	assert.Equal(t, 5432, cfg.Database.Port)
 	assert.Equal(t, "disable", cfg.Database.SSLMode)
-}
-
-func TestE2EHealth(t *testing.T) {
-	health := &struct {
-		Status string
-	}{}
-	_, err := request.SetResult(health).Get("/health")
-	assert.NoError(t, err)
-	assert.Equal(t, "ok", health.Status)
 }
 
 func TestE2ESuccess(t *testing.T) {
