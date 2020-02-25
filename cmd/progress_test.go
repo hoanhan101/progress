@@ -53,6 +53,12 @@ func TestE2ESuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*systems))
 
+	// Get all progress.
+	progresses := new([]model.Progress)
+	_, err = request.SetResult(progresses).Get("/progress")
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(*progresses))
+
 	// Create a new goal.
 	newGoal := new(model.Goal)
 	_, err = request.SetBody(map[string]interface{}{"name": "new goal", "context": "new context"}).SetResult(newGoal).Post("/goal")
@@ -71,6 +77,33 @@ func TestE2ESuccess(t *testing.T) {
 	assert.Equal(t, "new system", newSystem.Name)
 	assert.Equal(t, "everyday", newSystem.Repeat)
 	assert.NotNil(t, newSystem.DateCreated)
+
+	// Create a new progress.
+	newProgress := new(model.Progress)
+	_, err = request.
+		SetBody(
+			map[string]interface{}{
+				"system_id":       newSystem.ID,
+				"context":         "new progress",
+				"completed":       true,
+				"measurable_data": 100,
+				"measurable_unit": "lbs",
+				"sets":            3,
+				"reps":            5,
+				"date_created":    "2020-02-25T01:02:48.9366631Z",
+			}).
+		SetResult(newProgress).
+		Post("/progress")
+	assert.NoError(t, err)
+	assert.NotNil(t, newProgress.ID)
+	assert.Equal(t, newSystem.ID, newProgress.SystemID)
+	assert.Equal(t, "new progress", newProgress.Context)
+	assert.Equal(t, true, newProgress.Completed)
+	assert.Equal(t, 100, newProgress.MeasurableData)
+	assert.Equal(t, "lbs", newProgress.MeasurableUnit)
+	assert.Equal(t, 3, newProgress.Sets)
+	assert.Equal(t, 5, newProgress.Reps)
+	assert.NotNil(t, newProgress.DateCreated)
 
 	// Check if the new goal is added.
 	_, err = request.SetResult(goals).Get("/goal")
@@ -96,6 +129,23 @@ func TestE2ESuccess(t *testing.T) {
 		assert.Equal(t, newSystem.DateCreated.Day(), s.DateCreated.Day())
 	}
 
+	// Check if the new progress is added.
+	_, err = request.SetResult(progresses).Get("/progress")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(*progresses))
+
+	for _, p := range *progresses {
+		assert.Equal(t, newProgress.ID, p.ID)
+		assert.Equal(t, newProgress.SystemID, p.SystemID)
+		assert.Equal(t, newProgress.Context, p.Context)
+		assert.Equal(t, newProgress.Completed, p.Completed)
+		assert.Equal(t, newProgress.MeasurableData, p.MeasurableData)
+		assert.Equal(t, newProgress.MeasurableUnit, p.MeasurableUnit)
+		assert.Equal(t, newProgress.Sets, p.Sets)
+		assert.Equal(t, newProgress.Reps, p.Reps)
+		assert.Equal(t, newProgress.DateCreated.Day(), p.DateCreated.Day())
+	}
+
 	// Get the new goal.
 	goal := new(model.Goal)
 	_, err = request.SetResult(goal).Get("/goal/" + newGoal.ID)
@@ -113,6 +163,8 @@ func TestE2ESuccess(t *testing.T) {
 	assert.Equal(t, newSystem.Name, system.Name)
 	assert.Equal(t, newSystem.Repeat, system.Repeat)
 	assert.NotNil(t, system.DateCreated)
+
+	// TODO - Get the new progress
 
 	// Update the new goal.
 	putGoal := new(model.Goal)
@@ -133,6 +185,8 @@ func TestE2ESuccess(t *testing.T) {
 	assert.Equal(t, "every week", putSystem.Repeat)
 	assert.NotNil(t, putGoal.DateCreated)
 
+	// TODO - Update the new progress
+
 	// Delete the new goal.
 	status := &struct {
 		Message string
@@ -146,6 +200,8 @@ func TestE2ESuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "deleted successfully", status.Message)
 
+	// TODO - Delete the new progress
+
 	// Check if there is no goal.
 	_, err = request.SetResult(goals).Get("/goal")
 	assert.NoError(t, err)
@@ -155,6 +211,8 @@ func TestE2ESuccess(t *testing.T) {
 	_, err = request.SetResult(systems).Get("/system")
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(*systems))
+
+	// TODO - Check if there is no progress.
 }
 
 func TestE2EGoalError(t *testing.T) {
