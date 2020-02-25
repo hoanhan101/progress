@@ -129,7 +129,7 @@ func UpdateProgress(db *sqlx.DB, id string, u *UpdatedProgress) (*Progress, erro
 		p.Context = u.Context
 	}
 
-	if u.Completed != false {
+	if u.Completed {
 		p.Completed = u.Completed
 	}
 
