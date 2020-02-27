@@ -9,8 +9,15 @@ import (
 	"github.com/hoanhan101/progress/internal/config"
 )
 
-// Open knows how to open a database connection based on the configuration.
-func Open(cfg *config.Config) (*sqlx.DB, error) {
+// Open constructs a database connection string based on a given
+// configuration.
+func Open(cfg *config.Config, conn string) (*sqlx.DB, error) {
+	// If the connection string is provided, use that instead of constructing a
+	// new one. One use case is for Heroku deployment.
+	if conn != "" {
+		return sqlx.Open("postgres", conn)
+	}
+
 	// Query parameters.
 	q := make(url.Values)
 	q.Set("sslmode", cfg.Database.SSLMode)
