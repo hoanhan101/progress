@@ -1,6 +1,9 @@
 # Mac
 .DS_Store
 
+# Mount volumnes for postgres data
+deploy/compose/postgres-data
+
 # Binaries for programs and plugins
 /bin
 *.exe
@@ -15,5 +18,5 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
+# Dependency directories
 # vendor/

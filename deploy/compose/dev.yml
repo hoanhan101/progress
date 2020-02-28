@@ -7,11 +7,17 @@ services:
   progress:
     container_name: progress
     image: hoanhan101/progress
+    restart: always
     ports:
     - '8000:8000'
 
   postgres:
     container_name: postgres
     image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432

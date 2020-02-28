@@ -17,9 +17,10 @@ build-linux:  ## Build the executable binary for linux/amd64
 	GOARCH=amd64 GOOS=linux go build -o bin/${BIN_NAME} cmd/progress.go
 
 .PHONY: clean
-clean:  ## Remove temporary files and build artifacts
+clean:  ## Remove temporary files, build artifacts, postgres mounted volumes
 	go clean -v ./...
 	rm -f ${BIN_NAME} coverage.out
+	rm -rf deploy/compose/postgres-data
 
 .PHONY: cover
 cover: test-unit  ## Run unit tests and open the coverage report
