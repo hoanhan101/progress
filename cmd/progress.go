@@ -25,7 +25,7 @@ func run() error {
 	}
 
 	// Wait for a while for the database to be ready then open its connection.
-	time.Sleep(10 * time.Second)
+	time.Sleep(6 * time.Second)
 	db, err := database.Open(cfg)
 	if err != nil {
 		return err
