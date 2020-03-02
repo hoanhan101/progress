@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . .
 
+RUN go mod download
 RUN GOARCH=amd64 GOOS=linux go build -o bin/progress cmd/progress.go
 
 EXPOSE 8000
