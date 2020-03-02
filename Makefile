@@ -19,7 +19,8 @@ build-linux:  ## Build the executable binary for linux/amd64
 .PHONY: clean
 clean:  ## Remove temporary files, build artifacts, postgres mounted volumes
 	go clean -v ./...
-	rm -f ${BIN_NAME} coverage.out
+	rm -rf bin
+	rm -f coverage.out
 	rm -rf deploy/compose/postgres-data
 
 .PHONY: cover
@@ -27,7 +28,7 @@ cover: test-unit  ## Run unit tests and open the coverage report
 	go tool cover -html=coverage.out
 
 .PHONY: dev
-dev: clean build-linux docker ## Clean, build, run docker compose for dev environment
+dev: clean docker ## Clean, run docker compose for dev environment
 	docker-compose -f deploy/compose/dev.yml up
 
 .PHONY: docker
